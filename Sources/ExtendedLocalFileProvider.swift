@@ -217,6 +217,9 @@ public struct LocalFileInformationGenerator {
         assetImgGenerate.maximumSize = dimension ?? .zero
         assetImgGenerate.appliesPreferredTrackTransform = true
         let time = CMTime(value: asset.duration.value / 3, timescale: asset.duration.timescale)
+        #if os(visionOS)
+        return nil
+        #else
         if let cgImage = try? assetImgGenerate.copyCGImage(at: time, actualTime: nil) {
             #if os(macOS)
             return ImageClass(cgImage: cgImage, size: .zero)
@@ -224,6 +227,7 @@ public struct LocalFileInformationGenerator {
             return ImageClass(cgImage: cgImage)
             #endif
         }
+        #endif
         return nil
     }
     
@@ -398,7 +402,7 @@ public struct LocalFileInformationGenerator {
             }
         }
         let asset = AVURLAsset(url: fileURL, options: nil)
-        let videoTracks = asset.tracks(withMediaType: AVMediaType.video)
+        let videoTracks = asset.tracks.filter({ $0.mediaType == .video})
         if let videoTrack = videoTracks.first {
             var bitrate: Float = 0
             let width = Int(videoTrack.naturalSize.width)
@@ -412,7 +416,7 @@ public struct LocalFileInformationGenerator {
             add(key: "Duration", value: TimeInterval(duration).formatshort)
             add(key: "Video Bitrate", value: "\(Int(ceil(bitrate / 1000))) kbps")
         }
-        let audioTracks = asset.tracks(withMediaType: AVMediaType.audio)
+        let audioTracks = asset.tracks.filter({ $0.mediaType == .audio})
         // dic["Audio channels"] = audioTracks.count
         var bitrate: Float = 0
         for track in audioTracks {

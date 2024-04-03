@@ -999,7 +999,11 @@ extension ExtendedFileProvider {
             #if os(macOS)
             scale = NSScreen.main?.backingScaleFactor ?? 1.0 // fetch device is retina or not
             #else
-            scale = UIScreen.main.scale // fetch device is retina or not
+            #if os(visionOS)
+            scale = 1
+            #else
+              scale = UIScreen.main.scale // fetch device is retina or not
+            #endif
             #endif
         }
         let rect = CGRect(origin: .zero, size: frame.size)
