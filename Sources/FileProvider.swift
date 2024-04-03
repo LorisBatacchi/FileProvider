@@ -7,7 +7,7 @@
 //
 
 import Foundation
-#if os(iOS) || os(tvOS)
+#if os(iOS) || os(tvOS) || os(visionOS)
 import UIKit
 import ImageIO
 public typealias ImageClass = UIImage
@@ -676,7 +676,7 @@ public protocol FileProviderMonitor: FileProviderBasic {
     func isRegisteredForNotification(path: String) -> Bool
 }
 
-#if os(macOS) || os(iOS) || os(tvOS)
+#if os(macOS) || os(iOS) || os(tvOS) || os(visionOS)
 /// Allows undo file operations done by provider
 public protocol FileProvideUndoable: FileProviderOperations {
     /// To initialize undo manager either call `setupUndoManager()` or set it manually.
@@ -733,7 +733,7 @@ extension FileProvideUndoable {
     }
     
     public func _registerUndo(_ operation: FileOperationType) {
-        #if os(macOS) || os(iOS) || os(tvOS)
+        #if os(macOS) || os(iOS) || os(tvOS) || os(visionOS)
         guard let undoManager = self.undoManager, let undoOp = self.undoOperation(for: operation) else {
             return
         }
@@ -924,7 +924,7 @@ public protocol ExtendedFileProvider: FileProviderBasic {
     @discardableResult
     func propertiesOfFile(path: String, completionHandler: @escaping (_ propertiesDictionary: [String: Any], _ keys: [String], _ error: Error?) -> Void) -> Progress?
     
-    #if os(macOS) || os(iOS) || os(tvOS)
+    #if os(macOS) || os(iOS) || os(tvOS) || os(visionOS)
     /// Returuns true if thumbnail preview is supported by provider and file type accordingly.
     ///
     /// - Parameter path: path of file.
@@ -963,7 +963,7 @@ public protocol ExtendedFileProvider: FileProviderBasic {
     #endif
 }
 
-#if os(macOS) || os(iOS) || os(tvOS)
+#if os(macOS) || os(iOS) || os(tvOS) || os(visionOS)
 extension ExtendedFileProvider {
     @discardableResult
     public func thumbnailOfFile(path: String, completionHandler: @escaping ((_ image: ImageClass?, _ error: Error?) -> Void)) -> Progress? {

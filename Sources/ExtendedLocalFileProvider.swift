@@ -6,7 +6,7 @@
 //  Copyright © 2017 Mousavian. Distributed under MIT license.
 //
 
-#if os(macOS) || os(iOS) || os(tvOS)
+#if os(macOS) || os(iOS) || os(tvOS) || os(visionOS)
 import Foundation
 import ImageIO
 import CoreGraphics
